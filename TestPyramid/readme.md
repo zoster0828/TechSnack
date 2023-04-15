@@ -62,5 +62,5 @@ void getUserAPI() throws Exception {
 ```
 
 ---
-https://www.youtube.com/watch?v=4q9d8Aye0nY
-https://www.browserstack.com/guide/testing-pyramid-for-test-automation
+* https://www.youtube.com/watch?v=4q9d8Aye0nY
+* https://www.browserstack.com/guide/testing-pyramid-for-test-automation
