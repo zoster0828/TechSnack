@@ -38,6 +38,7 @@ broker에 이상이 발생한다면 제거하는 방식으로 유지됨.
 * replication factor를 통해 replication 될 갯수를 topic 별로 지정할 수 있고, 더 많은 복제본을 가질수록
 고가용성이 높아진다.
 * 이미 가지고 있는 data가 매우 큰 경우 신규 broker를 붙이는것은 시간이 다소 걸릴수는 있음.
+  * replication이 필요한 모든 데이터를 새로 sync 하고 나서야 broker가 online이 됨
 * 기본적으로 데이터를 local disk에 유지하기 때문에 file io에 영향을 받지만 Zero copy를 통해 성능을 향상시켰음.
 
 ### Partition - Replication의 동작 방식
@@ -76,3 +77,7 @@ broker에 이상이 발생한다면 제거하는 방식으로 유지됨.
 * 0~9의 message를 보냈을때 먼저 들어간 순서로 나오지만 그것으로 순서를 보장할 수 없음(대개 013246987 이런 형태로 나오게 됨)
 * 해결을 위해 partition을 1개만 쓰거나 키, timestamp등을 쓰는 방법이 있으나 성능이 매우 떨어지게 됨
 * 순서가 중요하다면 consumer 이후에 memory base의 queue를 하나 더 둬서 해결하는 방법이 있을 수 있음(redis와 같은)
+
+### Kafka shell
+* Kafka는 kafka/bin 밑에 대부분의 기능을 구현한 cli script가 있음, 이를 이용해 topic 생성, 삭제, consumer 현황 확인
+producing, consuming등 모든 행위를 해볼 수 있음.
