@@ -1,0 +1,14 @@
+@startuml
+start
+repeat
+repeat
+repeat :code changes;
+:commit;
+repeat while (review) is (request changes)
+repeat while (pre-submit check) is (fail)
+:merge;
+repeat while (acceptance test) is (fail)
+:release;
+
+stop
+@enduml
