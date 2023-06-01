@@ -1,0 +1,31 @@
+@startuml
+
+
+package "상위 수준의 문제" {
+object "Http 문자열 전송" as http
+}
+package "알고 있어야 할 하위 문제" {
+object "문자열 메시지 보내기" as send
+object "HTTP 연결 얻기" as connection
+object "HTTP 연결 닫기" as close
+}
+package "알 필요 없는 하위 문제" {
+object "HTTP 세션 확립" as session
+object "TCP 연결 확립" as tcp
+object "HTTP 프로토콜 사용" as protocol
+object "오류 탐지 및 재전송" as error
+object "네트워크상에서 데이터 전송" as network
+object "와이파이 혹은 셀룰러에 연결되었는가?" as wifi
+}
+
+http -down-> send
+http -down-> connection
+http -down-> close
+connection -down-> session
+session -down-> tcp
+session -down-> protocol
+tcp -down-> error
+tcp -down-> network
+network -down-> wifi
+
+@enduml
