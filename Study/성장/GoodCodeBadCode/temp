@@ -1,0 +1,3 @@
+* self host
+* docker in docker - issue로 k8s 내부에서 ci 툴을 돌리면 test: docker를 띄울 수 없다.
+* h2 database 이용한 테스트
