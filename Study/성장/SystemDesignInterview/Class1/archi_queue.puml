@@ -1,0 +1,32 @@
+@startuml
+package UserDevice {
+    component WebBrowser
+    component MobileApp
+}
+cloud CDN
+WebBrowser -right-> CDN
+component loadbalancer
+
+package Center1 {
+    component WebServer1
+    component WebServer2
+    queue queue
+    component BatchWorker
+    portout out
+}
+
+package Database1 {
+    database main
+    database sub
+}
+
+
+UserDevice <-down-> loadbalancer
+loadbalancer -down-> WebServer1
+loadbalancer -down-> WebServer2
+out -right--> Database1
+out -down-> cache
+WebServer1 -down-> queue
+queue -right-> BatchWorker
+
+@enduml

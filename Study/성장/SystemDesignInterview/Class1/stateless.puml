@@ -1,0 +1,16 @@
+@startuml
+component Servers{
+    component Server1
+    component Server2
+    component Server3
+    portin port
+    portout out
+}
+
+()UserA -down--> port
+UserB -down--> port
+UserC -down--> port
+database db
+out -> db
+
+@enduml

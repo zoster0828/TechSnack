@@ -1,0 +1,49 @@
+@startuml
+package UserDevice {
+    component WebBrowser
+    component MobileApp
+}
+cloud CDN
+WebBrowser -right-> CDN
+component loadbalancer
+
+package Center1 {
+    component WebServer1
+    component WebServer2
+}
+
+package Center2 {
+    component WebServer3
+    component WebServer4
+}
+
+package Database1 {
+    database main
+    database sub
+}
+
+package Database2 {
+    database main2
+    database sub2
+}
+
+UserDevice <-down-> loadbalancer
+loadbalancer -down-> WebServer1
+loadbalancer -down-> WebServer2
+loadbalancer -down-> WebServer3
+loadbalancer -down-> WebServer4
+WebServer1 -down--> main
+WebServer1 -down--> sub
+WebServer2 -down--> main
+WebServer2 -down--> sub
+WebServer1 -down-> cache
+WebServer2 -down-> cache
+
+WebServer3 -down--> main2
+WebServer3 -down--> sub2
+WebServer4 -down--> main2
+WebServer4 -down--> sub2
+WebServer3 -down-> cache2
+WebServer4 -down-> cache2
+
+@enduml
