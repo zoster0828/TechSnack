@@ -1,0 +1,18 @@
+@startuml
+package UserDevice {
+    component WebBrowser
+    component MobileApp
+}
+
+component loadbalancer
+
+package Server {
+    component WebServer1
+    component WebServer2
+}
+
+UserDevice <-down-> loadbalancer
+loadbalancer <-down-> WebServer1
+loadbalancer <-down-> WebServer2
+
+@enduml

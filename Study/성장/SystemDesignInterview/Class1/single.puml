@@ -1,0 +1,13 @@
+@startuml
+package UserDevice {
+    component WebBrowser
+    component MobileApp
+}
+
+package Server {
+    component WebServer
+}
+
+UserDevice <-down-> Server
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+package UserDevice {
+    component WebBrowser
+    component MobileApp
+}
+
+package Server {
+    component WebServer
+    database db
+}
+
+UserDevice <-down-> Server
+WebServer <-right-> db
+
+@enduml

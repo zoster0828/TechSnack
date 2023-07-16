@@ -1,0 +1,10 @@
+@startuml
+participant "WebBrowser, MobileApp" as device
+device -> DNS : api.mysite.com
+DNS --> device : ip addr
+device -> WebServer : ip addr
+database db
+WebServer -> db : read/write/update
+db --> WebServer : data return
+WebServer --> device : json
+@enduml

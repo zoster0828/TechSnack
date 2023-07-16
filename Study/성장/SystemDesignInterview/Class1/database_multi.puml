@@ -1,0 +1,17 @@
+@startuml
+database MainDB
+package read {
+database SubDB1
+database SubDB2
+database SubDB3
+}
+() Webserver
+Webserver -down--> MainDB : write
+Webserver -right-> DBloadbalancer
+DBloadbalancer -down-> read : read
+MainDB -down-> SubDB1 : replication
+MainDB -down-> SubDB2 : replication
+MainDB -down-> SubDB3 : replication
+
+
+@enduml
