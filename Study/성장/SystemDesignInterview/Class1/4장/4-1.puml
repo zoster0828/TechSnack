@@ -1,0 +1,15 @@
+@startuml
+package client {
+    component "web browser"
+    component mobile
+
+}
+
+package Server {
+    component "API SERVERS"
+    component "Throughput limiter"
+}
+
+"web browser" -> Server
+
+@enduml

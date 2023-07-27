@@ -1,0 +1,19 @@
+@startuml
+package client {
+    component "web browser"
+    component mobile
+
+}
+
+queue "Throughput limiter"
+
+package Server {
+    component "API SERVERS"
+}
+
+
+
+"web browser" -> "Throughput limiter"
+"Throughput limiter" -> Server
+"web browser" <- "Throughput limiter" : too many request
+@enduml

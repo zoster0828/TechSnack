@@ -1,0 +1,7 @@
+@startuml
+(*) -down-> request
+if Token exists then
+    --> [true] "request received"
+else
+-> [false] "request dropped"
+@enduml

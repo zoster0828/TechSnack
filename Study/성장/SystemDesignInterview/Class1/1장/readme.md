@@ -70,7 +70,7 @@
 * 캐시 서버가 spof가 되지 않도록
 * 메모리 크기로 인한 eviction 예측 필요
 * eviction 정책
-  * LRU, LU, FIFO
+  * LRU, LFU, FIFO
 
 ## CDN
 * binary cache

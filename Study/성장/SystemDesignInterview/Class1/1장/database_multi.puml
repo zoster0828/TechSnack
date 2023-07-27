@@ -1,5 +1,5 @@
 @startuml
-database MainDB
+database Sub
 package read {
 database SubDB1
 database SubDB2
