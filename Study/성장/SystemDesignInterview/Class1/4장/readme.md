@@ -96,6 +96,10 @@
 * [Sorted set](https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/)
   * 현재 timestamp를 set에 기록하는 방식
   * timestamp가 동일하면 +1만 되는것 아닌가?
+    * 배달의 민족 sorted set
+      * https://www.youtube.com/watch?v=uWcn7omddxs&pp=ygUi7Jqw7JWE7ZWc7YWM7YGs7Yag7YGsIOyXlOuTnOqyjOyehA%3D%3D
+    * 우아한레디스
+      * https://www.youtube.com/watch?v=mPB2CZiAkKM&pp=ygUT7JuL7JWE7ZWcIOugiOuUlOyKpA%3D%3D
 ### 동기화
 * redis와 같은 분산 캐시를 써라
 > 이 장의 이름이 redis?
@@ -109,3 +113,4 @@
 ## 4단계 마무리 
 * soft / hard limit
 * 7계층이 아닌 곳에서의 제한도 가능
+
