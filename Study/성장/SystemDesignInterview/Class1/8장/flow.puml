@@ -1,0 +1,10 @@
+@startuml
+(*) -down-> Long URL
+if URL exists in db then
+    --> (*)
+else
+    --> [false] "Create new ID"
+"Create new ID" -down> "Generate shorten url"
+"Generate shorten url" -down> Save to db
+-right-> (*)
+@enduml
