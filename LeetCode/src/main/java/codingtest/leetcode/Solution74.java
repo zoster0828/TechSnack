@@ -32,7 +32,7 @@ public class Solution74 {
         if(x == matrix.length) {
             x = x-1;
             int y = matrix[0].length-1;
-            return matrix[x][y];
+            return matrix[x][y]; 
         }
         int y = position % matrix[0].length;
 
