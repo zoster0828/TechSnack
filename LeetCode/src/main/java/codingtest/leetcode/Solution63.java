@@ -1,49 +1,27 @@
 package codingtest.leetcode;
 
 public class Solution63 {
-    int x;
-    int y;
-    int result;
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-        result = 0;
-        x = obstacleGrid[0].length;
-        y = obstacleGrid.length;
 
-        search(new int[y][x],obstacleGrid, 0, 0);
-        return result;
-    }
+        int x = obstacleGrid[0].length;
+        int y = obstacleGrid.length;
+        int dp[][] = new int[y][x];
+        for(int column = 0 ; column < y ; column++) {
+            for(int row = 0 ; row < x ; row++) {
+                if(obstacleGrid[column][row] == 1) {
+                    dp[column][row] = 0;
+                    continue;
+                }
 
-    public void search(int[][] path,int[][] obstacleGrid, int startX, int startY) {
-        if(startX >= x || startY >= y || startX < 0 || startY < 0) {
-            return;
+                if(row == 0 && column == 0) {
+                    dp[column][row] = 1;
+                    continue;
+                }
+
+                dp[column][row] = (column-1 < 0 ? 0 : dp[column-1][row]) + (row-1 < 0 ? 0 : dp[column][row-1]);
+            }
         }
 
-        if(obstacleGrid[startY][startX] == 1) return;
-
-        if(path[startY][startX] == 1) return;
-
-        if(startX == x-1 && startY == y-1) {
-            result += 1;
-            return;
-        }
-
-        path[startY][startX] = 1;
-        search(copy(path), obstacleGrid,startX+1, startY);
-        search(copy(path), obstacleGrid, startX, startY+1);
-//        search(copy(path), obstacleGrid, startX-1, startY);
-//        search(copy(path), obstacleGrid, startX, startY-1);
-    }
-
-    public int[][] copy(int[][] src) {
-        if (src == null) {
-            return null;
-        }
-
-        int[][] copy = new int[src.length][];
-        for (int i = 0; i < src.length; i++) {
-            copy[i] = src[i].clone();
-        }
-
-        return copy;
+        return dp[y-1][x-1];
     }
 }
