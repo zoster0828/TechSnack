@@ -7,25 +7,24 @@ import java.util.PriorityQueue;
 public class Solution239 {
     public int[] maxSlidingWindow(int[] nums, int k) {
         PriorityQueue<Value> queue = new PriorityQueue();
-        for (int i = 0; i < nums.length; i++) {
+        for (int i = 0; i < k; i++) {
             queue.add(new Value(nums[i], i));
         }
 
-        int[] result = new int[nums.length - k +1];
+        int[] result = new int[nums.length - k + 1];
 
-        for (int i = 0; i < result.length; i++) {
-            List<Value> popped = new ArrayList<>();
+        for (int i = 0; i < nums.length - k + 1; i++) {
+            queue.add(new Value(nums[i+k-1], i+k-1));
+            Value value = null;
             while(true) {
-                Value value = queue.poll();
-                popped.add(value);
-                if(i <= value.position && i+k > value.position) {
-                    result[i] = value.value;
-                    break;
+                value = queue.poll();
+                if (value.position < i || value.position >= i + k) {
+                    continue;
                 }
+                break;
             }
-            for (Value value : popped) {
-                queue.add(value);
-            }
+            result[i] = value.value;
+            queue.add(value);
         }
 
         return result;
