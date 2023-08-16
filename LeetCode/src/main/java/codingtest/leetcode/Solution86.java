@@ -4,34 +4,34 @@ import codingtest.ListNode;
 
 public class Solution86 {
     public ListNode partition(ListNode head, int x) {
-        ListNode small = null;
+        ListNode resultHead = null;
         ListNode smallTail = null;
         ListNode big = null;
         ListNode bigHead = null;
-        ListNode start = head;
-        while(start != null) {
-            if(start.val < x) {
-                if(small == null) {
-                    small = new ListNode(start.val);
-                    smallTail = small;
-                    start = start.next;
+        ListNode iterationNode = head;
+        while(iterationNode != null) {
+            if(iterationNode.val < x) {
+                if(resultHead == null) {
+                    resultHead = new ListNode(iterationNode.val);
+                    smallTail = resultHead;
+                    iterationNode = iterationNode.next;
                     continue;
                 }
 
-                smallTail.next = new ListNode(start.val);
+                smallTail.next = new ListNode(iterationNode.val);
                 smallTail = smallTail.next;
-                start = start.next;
+                iterationNode = iterationNode.next;
             } else {
                 if(big == null) {
-                    bigHead = new ListNode(start.val);
+                    bigHead = new ListNode(iterationNode.val);
                     big = bigHead;
-                    start = start.next;
+                    iterationNode = iterationNode.next;
                     continue;
                 }
 
-                big.next = new ListNode(start.val);
+                big.next = new ListNode(iterationNode.val);
                 big = big.next;
-                start = start.next;
+                iterationNode = iterationNode.next;
             }
 
 
@@ -40,8 +40,9 @@ public class Solution86 {
         if(smallTail == null) {
             return bigHead;
         }
+
         smallTail.next = bigHead;
 
-        return small;
+        return resultHead;
     }
 }
