@@ -1,0 +1,20 @@
+@startuml
+entity User {
+user_id
+--
+email
+country_code
+phone_number
+created_at
+}
+
+entity Device {
+id
+--
+device_token
+user_id
+last_logged_in_at
+}
+
+User ||-right-o{ Device
+@enduml
