@@ -1,30 +1,41 @@
 package codingtest.leetcode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Solution239 {
     public int[] maxSlidingWindow(int[] nums, int k) {
-        PriorityQueue<Value> queue = new PriorityQueue();
-        for (int i = 0; i < k; i++) {
-            queue.add(new Value(nums[i], i));
-        }
+        int n = nums.length;
+        if (n * k == 0) return new int[0];
 
-        int[] result = new int[nums.length - k + 1];
+        int[] result = new int[n - k + 1];
+        int resultIdx = 0;
 
-        for (int i = 0; i < nums.length - k + 1; i++) {
-            queue.add(new Value(nums[i+k-1], i+k-1));
-            Value value = null;
-            while(true) {
-                value = queue.poll();
-                if (value.position < i || value.position >= i + k) {
-                    continue;
-                }
-                break;
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        for (int i = 0; i < n; i++) {
+            while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+                deque.pollFirst();
             }
-            result[i] = value.value;
-            queue.add(value);
+
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+
+            deque.addLast(i);
+
+            if (i >= k - 1) {
+                List<Integer> temp = new ArrayList<>();
+                while(!deque.isEmpty()){
+                    int num = deque.poll();
+                    temp.add(num);
+                    System.out.print(num);
+                }
+                System.out.println();
+                for (Integer integer : temp) {
+                    deque.addLast(integer);
+                }
+                result[resultIdx++] = nums[deque.peekFirst()];
+            }
         }
 
         return result;
