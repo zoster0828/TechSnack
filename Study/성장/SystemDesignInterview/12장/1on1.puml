@@ -1,0 +1,20 @@
+@startuml
+entity message {
+bigint message_id
+--
+bigint message_from
+bitint message_to
+text content
+timestamp created_at
+}
+
+entity group_message {
+bigint channel_id
+bigint message_id
+--
+bitint message_to
+text content
+timestamp created_at
+}
+
+@enduml
