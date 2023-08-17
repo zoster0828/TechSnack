@@ -23,7 +23,7 @@
 
 ### 피드 읽기
 * 뉴스 피드를 읽는다
-* GET /v1/me/feed
+
   * POST와 비교했을때 feed의 의미가 좀 달라진것 같음
   * Get을 이렇게 쓴다면 POST는 /v1/me/feed/posting 가 되었어야 할 것 같음
 
