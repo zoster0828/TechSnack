@@ -1,6 +1,3 @@
-# TDD
-
-TDD에 대한 강의와 생각을 정리하는 REPOSITORY 였는데
-그냥 문서 repository로 변경됨
-
-+ leetcode 기록
+* 스터디 기록
+* 개발에 대한 생각 기록
+* leetcode 기록
