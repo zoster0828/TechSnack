@@ -4,57 +4,64 @@ public class Solution542 {
     public int[][] updateMatrix(int[][] mat) {
         int column = mat.length;
         int row = mat[0].length;
-        int result[][] = new int[column][row];
-        for(int i = 0 ; i < column  ; i++) {
-            for (int j = 0; j < row; j++) {
-                result[i][j] = mat[i][j];
-            }
-        }
 
         for(int y = 0 ; y < column ; y++) {
             for(int x = 0 ; x < row ; x++) {
                 if(mat[y][x] == 0) {
-                    spray(result, mat, x, y);
+                    spray0(mat, x, y);
                 }
             }
         }
 
-        return result;
+        return mat;
     }
 
-    private void spray(int[][] result, int[][] mat,  int x, int y) {
-        for(int i = x-1, num=1 ; i >= 0 ; i--,num++) {
-            if(result[y][i] != 0 && result[y][i] < num) {
-                break;
-            }
-            if(mat[y][i] != 0) {
-                result[y][i] = num;
+    private void spray0(int[][] mat, int x, int y) {
+        if(x-1 >= 0) {
+            mat[y][x-1] = 1;
+            spray1minus(mat, x-1, y, 1);
+        }
+        if(y-1 >= 0) {
+            mat[y-1][x] = 1;
+            spray1minus(mat, x, y-1, 1);
+        }
+        if(x+1 < mat[0].length) {
+            mat[y][x+1] = 1;
+            spray1plus(mat, x+1, y, 1);
+        }
+        if(y+1 < mat.length) {
+            mat[y+1][x] = 1;
+            spray1plus(mat, x, y+1, 1);
+        }
+    }
+
+    private void spray1plus(int[][] mat, int x, int y, int value) {
+        if(x+1 < mat[0].length && mat[y][x+1] != 0) {
+            if(mat[y][x + 1] == 1 || mat[y][x + 1] > value +1) {
+                mat[y][x + 1] = value + 1;
+                spray1plus(mat, x + 1, y, value + 1);
             }
         }
-
-        for(int i = x+1, num=1 ; i < result[0].length ; i++,num++) {
-            if(result[y][i] != 0 && result[y][i] < num) {
-                break;
+        if(y+1 < mat.length && mat[y+1][x] != 0) {
+            if(mat[y+1][x] == 1 || mat[y+1][x] > value +1) {
+                mat[y+1][x] = value+1;
+                spray1plus(mat, x, y+1, value+1);
             }
-
-            if(mat[y][i] != 0)
-                result[y][i] = num;
         }
+    }
 
-        for(int i = y-1, num=1 ; i >= 0 ; i--,num++) {
-            if(result[i][x] != 0 && result[i][x] < num) {
-                break;
+    private void spray1minus(int[][] mat, int x, int y, int value) {
+        if(x-1 >= 0 && mat[y][x-1] != 0) {
+            if(mat[y][x - 1] == 1 || mat[y][x - 1] > value +1) {
+                mat[y][x - 1] = value + 1;
+                spray1minus(mat, x - 1, y, value + 1);
             }
-            if(mat[i][x] != 0)
-                result[i][x] = num;
         }
-
-        for(int i = y+1, num=1 ; i < result.length ; i++,num++) {
-            if(result[i][x] != 0 && result[i][x] < num) {
-                break;
+        if(y-1 >= 0 && mat[y-1][x] != 0) {
+            if(mat[y - 1][x] == 1 || mat[y - 1][x] > value +1) {
+                mat[y - 1][x] = value + 1;
+                spray1minus(mat, x, y - 1, value + 1);
             }
-            if(mat[i][x] != 0)
-                result[i][x] = num;
         }
     }
 
