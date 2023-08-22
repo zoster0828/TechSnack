@@ -1,0 +1,4 @@
+@startuml
+() log -> "log server"
+
+@enduml
