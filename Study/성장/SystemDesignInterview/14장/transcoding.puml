@@ -1,0 +1,14 @@
+@startuml
+component preprocessor
+component "DAG scheduler"
+component "resource manager"
+component "resource worker"
+component "temporary storage"
+
+preprocessor -> "DAG scheduler"
+"DAG scheduler" -> "resource manager"
+"resource manager" -> "resource worker"
+"resource worker" -up-> "temporary storage"
+"resource worker" -> "encoded video"
+preprocessor -up-> "temporary storage"
+@enduml
