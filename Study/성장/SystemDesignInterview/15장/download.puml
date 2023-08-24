@@ -1,0 +1,27 @@
+@startuml
+autonumber
+participant 클라이언트2
+participant "블록 저장소 서버"
+participant "클라우드 저장소"
+participant "API 서버"
+participant "메타데이터 DB"
+participant "알림 서비스"
+activate 클라이언트2
+클라이언트2 <-- "알림 서비스" : 변경 알림
+클라이언트2 -> "API 서버" : 변경 내역 요청
+activate "API 서버"
+"API 서버" -> "메타데이터 DB" : 변경 내역 요청
+activate "메타데이터 DB"
+"메타데이터 DB" --> "API 서버" : 변경 내역 반환
+deactivate "메타데이터 DB"
+"API 서버" --> 클라이언트2 : 변경 내역 반환
+deactivate "API 서버"
+클라이언트2 -> "블록 저장소 서버" : 블록 다운로드
+activate "블록 저장소 서버"
+"블록 저장소 서버" -> "클라우드 저장소" : 블록 다운로드
+activate "클라우드 저장소"
+"클라우드 저장소" --> "블록 저장소 서버" : 블록 반환
+deactivate "클라우드 저장소"
+"블록 저장소 서버" --> 클라이언트2 : 블록 반환
+deactivate "블록 저장소 서버"
+@enduml
