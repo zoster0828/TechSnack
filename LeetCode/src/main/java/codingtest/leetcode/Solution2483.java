@@ -2,34 +2,26 @@ package codingtest.leetcode;
 
 public class Solution2483 {
     public int bestClosingTime(String customers) {
-        char[] chars = customers.toCharArray();
-        int plus = 0;
-        int minus = 0;
-        for (char aChar : chars) {
-            if(aChar=='Y') {
-                plus++;
+        int maxValue = 0;
+        int minValuePosition = 0;
+        int currentValue = 0;
+        for (int i = 0; i < customers.length(); i++) {
+            if(isOpened(customers.charAt(i))) {
+                currentValue++;
             } else {
+                currentValue--;
+            }
+
+            if(currentValue > maxValue) {
+                maxValue = currentValue;
+                minValuePosition = i+1;
             }
         }
 
-        int min = plus;
-        int po = 0;
-        int[] values = new int[chars.length+1];
-        values[0] = plus;
-        for (int i = 0; i < chars.length; i++) {
-            if(chars[i]=='Y') {
-                plus--;
-            } else {
-                minus++;
-            }
-            values[i+1] = plus+minus;
+        return minValuePosition;
+    }
 
-            if(values[i+1] < min) {
-                min = values[i+1];
-                po = i+1;
-            }
-        }
-
-        return po;
+    private boolean isOpened(char chars) {
+        return chars == 'Y';
     }
 }
