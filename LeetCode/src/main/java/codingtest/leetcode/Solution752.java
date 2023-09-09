@@ -11,10 +11,11 @@ public class Solution752 {
 
         int quotient = lengthOfListNode / k;
         int remainder = lengthOfListNode % k;
-        for(int multiple = 0 ; multiple < k ; multiple++) {
-            result[multiple] = head;
-            int nodeLength = getNodeLength(quotient, multiple, remainder--);
-            head = moveToNextHead(head, nodeLength);
+        for(int partIndex = 0 ; partIndex < k ; partIndex++) {
+            result[partIndex] = head;
+            int partLength = calculatePartLength(quotient, partIndex, remainder--);
+            head = moveToNextHead(head, partLength);
+            head = popListNode(head);
         }
 
         return result;
@@ -29,7 +30,7 @@ public class Solution752 {
         return lengthOfListNode;
     }
 
-    private int getNodeLength(int quotient, int multiple, int remainder) {
+    private int calculatePartLength(int quotient, int multiple, int remainder) {
         int startPos = quotient*multiple;
         int endPos = quotient*(multiple+1)+(remainder > 0 ? 1 : 0);
         return endPos - startPos -1;
@@ -46,12 +47,16 @@ public class Solution752 {
             target = target.next;
         }
 
+
+        return target;
+    }
+
+    private ListNode popListNode(ListNode target) {
         if(target != null) {
             ListNode temp = target;
             target = target.next;
             temp.next = null;
         }
-
         return target;
     }
 }
