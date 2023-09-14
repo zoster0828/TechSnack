@@ -5,9 +5,7 @@ import java.util.Arrays;
 public class Solution135 {
     public int candy(int[] ratings) {
         int[] values = new int[ratings.length];
-        for (int i = 0; i < values.length; i++) {
-            values[i] = 1;
-        }
+        Arrays.fill(values, 1);
 
         for (int i = 0; i < ratings.length-1; i++) {
             if(ratings[i] < ratings[i+1]) {
