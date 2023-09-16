@@ -1,11 +1,8 @@
-package codingtest;
+package codingtest.leetcode.biweekly113;
 
-import codingtest.ListNode;
+import java.util.List;
 
-import java.util.*;
-
-public class Solution {
-
+public class Solution1 {
     public int minimumRightShifts(List<Integer> nums) {
         int count = 0;
         while(true) {
