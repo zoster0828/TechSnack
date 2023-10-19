@@ -1,0 +1,6 @@
+@startuml
+gateway <- "client register" : {client_id:new, statuscod:500}
+"log collector" -> gateway
+"alram policy" -> "log collector"
+"client register" -> "alram policy" : {client_id: new, statuscode:500}
+@enduml
