@@ -13,4 +13,11 @@ class Solution2515Test {
         solution2515.closetTarget(new String[]{"sjwjixunvm","dpdykpuuen","medqhltelb","aoqabahtfx","medqhltelb","aoqabahtfx","zgcmtppupi","pgkzblegek","zgcmtppupi","rzwefukfpm"}, "vqjqatovzh", 4);
     }
 
+    @Test
+    void tr() {
+        int a = 5;
+        System.out.println(a);
+        a = a ^ 7;
+        System.out.println(a);
+    }
 }

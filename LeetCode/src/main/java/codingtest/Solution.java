@@ -6,40 +6,28 @@ import java.util.*;
 
 public class Solution {
 
-    public int minimumRightShifts(List<Integer> nums) {
-        int count = 0;
-        while(true) {
-            if(isIncrease(nums)) {
-                break;
+    public int solution(int N) {
+        String candidate = String.valueOf(N);
+        int length = candidate.length();
+        StringBuilder builder = new StringBuilder();
+
+        int start = N < 0 ? length - 1 : 0;
+        int end = N < 0 ? -1 : length;
+        int step = N < 0 ? -1 : 1;
+
+        boolean notFound = true;
+        for (int i = start; notFound && i != end; i += step) {
+            if (candidate.charAt(i) == '5' && notFound) {
+                notFound = false;
             } else {
-                count++;
-                shift(nums);
-            }
-
-            if(count > nums.size()) {
-                return -1;
-            }
-        }
-        return count;
-    }
-
-    private void shift(List<Integer> nums) {
-        int num = nums.get(nums.size()-1);
-        nums.remove(nums.size()-1);
-        nums.add(0,num);
-    }
-
-    private boolean isIncrease(List<Integer> nums) {
-        int prev = Integer.MIN_VALUE;
-        for (Integer num : nums) {
-            if(num > prev) {
-                prev = num;
-            }
-            else {
-                return false;
+                builder.append(candidate.charAt(i));
             }
         }
 
-        return true;
+        if (N < 0) {
+            builder.reverse();
+        }
+
+        return Integer.valueOf(builder.toString());
     }
 }
