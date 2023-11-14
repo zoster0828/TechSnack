@@ -1,0 +1,13 @@
+@startuml
+component Vender
+component WebInterface
+component CliInterface
+component Customer
+database persistence
+WebInterface -down-> venderInterface
+venderInterface <|.down. Vender
+CliInterface -down-> venderInterface
+Customer -> venderInterface
+Vender -down-> DatabaseInterface
+DatabaseInterface <|.down. persistence
+@enduml
