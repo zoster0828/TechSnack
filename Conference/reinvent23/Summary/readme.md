@@ -42,8 +42,9 @@
   * Observability는 이게 어떻게 동작하고 있는지, 왜 동작하고 있는지까지 알려주는 것
 ![img_5.png](img_5.png)
 
-### ODD(Observability Driven Development) 왜 해야할까?
+### 그럼 ODD(Observability Driven Development)는 MSA의 문제를 해결할 수 있을까?
 * Observability는 Architecture를 쉽게 관찰하고 진화시킬 수 있도록 한다
+  * 마이크로서비스는 이벤트 분리, 스트랭글러 패턴, 도메인 주도 설계를 통해 점진적으로 발전한다.
 * 많은 수의 component를 효과적으로 관찰하고 관리하는 방법
 * 그래서 필요없는 모듈을 통폐합하거나 축소하거나, 또는 제거할 수 있다
   * 관측 가능한 경우와 그렇지 않은 경우는 비용을 줄이는데 큰 차이가 있다
@@ -68,3 +69,5 @@
 * [Building an effective observability strategy (COP325)](https://www.youtube.com/watch?v=7PQv9eYCJW8&ab_channel=AWSEvents)
 * [Driving down the cost of observability (DOP224)](https://www.youtube.com/watch?v=AjcN0LhzyFA&ab_channel=AWSEvents)
 * [Keynote with Peter DeSantis](https://www.youtube.com/watch?v=pJG6nmR7XxI&ab_channel=AWSEvents)
+* [AWS re:Invent 2020: Application modernization](https://www.youtube.com/watch?v=CdEDhWdmutQ&ab_channel=AWSEvents)
+* [AWS re:Invent 2022 - Building and scaling a modernization strategy (ENT214)](https://www.youtube.com/watch?v=NvDrtlrNPgk&ab_channel=AWSEvents)
