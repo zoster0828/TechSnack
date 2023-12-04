@@ -1,6 +1,6 @@
 # AWS re:invent 2023 summary
 ![img_1.png](img_1.png)
-* Word cloud로 만들어본 모든 session의 단어 출현 빈도
+* 모든 session의 제목 출현 빈도로 만든 Word cloud 
 
 ## 가장 큰 화두는 결국 Generative AI
 * 어떻게, 얼마나 쉽게 안전하게 generative AI를 만들 수 있는가
