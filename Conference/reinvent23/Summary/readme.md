@@ -36,28 +36,31 @@
 ### Modernization Architecture(MSA)는 그럼 문제가 없을까?
 * 여러가지 문제가 있겠지만
   * 결국 아무리 잘하더라도 많은 component수에서 오는 운영적인 어려움은 architecture가 커질수록 폭발적으로 증가한다
-
 ### 그래서 여기서 등장한것이 Observability
 * Observabilty는 Monitoring과 어떤 차이가 있을까?
   * Monitoring은 이 component가 정상이다 아니다만 말해줄 수 있다
   * Observability는 이게 어떻게 동작하고 있는지, 왜 동작하고 있는지까지 알려주는 것
 ![img_5.png](img_5.png)
 
-### 왜 해야할까?
+### ODD(Observability Driven Development) 왜 해야할까?
 * Observability는 Architecture를 쉽게 관찰하고 진화시킬 수 있도록 한다
-* 그래서 필요없는 모듈을 통폐합하거나 축소하거나, 또는 제거할 수 있다 
+* 많은 수의 component를 효과적으로 관찰하고 관리하는 방법
+* 그래서 필요없는 모듈을 통폐합하거나 축소하거나, 또는 제거할 수 있다
   * 관측 가능한 경우와 그렇지 않은 경우는 비용을 줄이는데 큰 차이가 있다
+  * ![img_9.png](img_9.png)
   * [TheFrugalArchitect LAW IV](https://thefrugalarchitect.com/laws/unobserved-systems-lead-to-unknown-costs.html)
 
-### 그리고 Component가 너무 많은게 문제라면 우리가 줄여줄게, Serverless!
+### 그래도 Component가 너무 많은게 문제라면 우리가 줄여줄게, Serverless!
 * Event driven을 위해 Message bus(kafka)도 운영해야하고
 * Component마다 하나씩 Mysql도 운영해야 하고
 * 모듈이 너무 많아, 너희들은 business만 해 그런건 우리가 해줄께
   * Limitless Aurora
+  * ![img_8.png](img_8.png)
   * Limitless ElasticCache
+  * ![img_7.png](img_7.png)
 
 ---
-# 추천 session
+# Sessions
 * [Advanced event-driven patterns with Amazon EventBridge (COM301-R)](https://www.youtube.com/watch?v=6X4lSPkn4ps&t=573s&ab_channel=AWSEvents)
 * [Keynote with Dr. Werner Vogels](https://www.youtube.com/watch?v=UTRBVPvzt9w&t=2533s&ab_channel=AmazonWebServices)
 * [Building observability to increase resiliency (COP343)](https://www.youtube.com/watch?v=MARiKxvrdmc&ab_channel=AWSEvents)
