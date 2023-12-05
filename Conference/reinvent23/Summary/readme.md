@@ -33,7 +33,7 @@
 > 각 도메인은 완전히 decoupling 되어 있기 때문에 각자의 이유로 스케일링되고 변경 될 수 있다
 
 
-### Modernization Architecture(MSA)는 그럼 문제가 없을까?
+### Modernization Architecture(Cloud + MSA)는 그럼 문제가 없을까?
 * 여러가지 문제가 있겠지만
   * 결국 아무리 잘하더라도 많은 component수에서 오는 운영적인 어려움은 architecture가 커질수록 폭발적으로 증가한다
 ### 그래서 여기서 등장한것이 Observability
@@ -42,7 +42,7 @@
   * Observability는 이게 어떻게 동작하고 있는지, 왜 동작하고 있는지까지 알려주는 것
 ![img_5.png](img_5.png)
 
-### 그럼 ODD(Observability Driven Development)는 MSA의 문제를 해결할 수 있을까?
+### 그럼 ODD(Observability Driven Development)는 MSA의 문제를 어떻게 해결할 수 있을까?
 * Observability는 Architecture를 쉽게 관찰하고 진화시킬 수 있도록 한다
   * 마이크로서비스는 이벤트 분리, 스트랭글러 패턴, 도메인 주도 설계를 통해 점진적으로 발전한다.
 * 많은 수의 component를 효과적으로 관찰하고 관리하는 방법
@@ -71,3 +71,4 @@
 * [Keynote with Peter DeSantis](https://www.youtube.com/watch?v=pJG6nmR7XxI&ab_channel=AWSEvents)
 * [AWS re:Invent 2020: Application modernization](https://www.youtube.com/watch?v=CdEDhWdmutQ&ab_channel=AWSEvents)
 * [AWS re:Invent 2022 - Building and scaling a modernization strategy (ENT214)](https://www.youtube.com/watch?v=NvDrtlrNPgk&ab_channel=AWSEvents)
+* [AWS re:Invent 2022 - Keynote with Dr. Werner Vogels](https://youtu.be/RfvL_423a-I?si=hKEO1HhEY5Q3SSxS)
