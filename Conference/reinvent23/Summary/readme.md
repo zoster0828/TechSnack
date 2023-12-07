@@ -40,6 +40,9 @@
 * Observabilty는 Monitoring과 어떤 차이가 있을까?
   * Monitoring은 이 component가 정상이다 아니다만 말해줄 수 있다
   * Observability는 이게 어떻게 동작하고 있는지, 왜 동작하고 있는지까지 알려주는 것
+  * https://github.com/aws-samples/observability-driven-development
+    * recap 에서 요청해볼 수 있을것 같은 세션
+  
 ![img_5.png](img_5.png)
 
 ### 그럼 ODD(Observability Driven Development)는 MSA의 문제를 어떻게 해결할 수 있을까?
@@ -59,6 +62,23 @@
   * ![img_8.png](img_8.png)
   * Limitless ElasticCache
   * ![img_7.png](img_7.png)
+
+### Insight
+> Amazon/Netflix는 2011년경 MSA를 채택하고 성공적으로 구성
+> 
+> re:invent에서는 8년전(2015)부터 언급하며 구체적으로 묘사하기 시작
+> 
+> 한국에서는 2020년경부터 배민을 필두로 MSA를 성공적으로 구성한 회사들이 등장
+> 
+> re:invent의 언급을 감안해도 5년 정도의 갭이 있음
+> 
+> aws는 MSA의 완성을 넘어 MSA의 문제점에 대한 언급과 함께 Observability의 중요성을 이야기하며
+> 
+> 2년전부터 Observability driven development에 대한 언급을 시작했음
+> 
+> 곧 한국에서도 Observability에 대한 관심이 높아질 것으로 보이며
+> 
+> MSA로의 전환을 생각한다면 미리 Observability 주도적인 아키텍처를 개발하는것은 어떨까
 
 ---
 # Sessions
