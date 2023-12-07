@@ -72,7 +72,7 @@
 > 
 > re:invent의 언급을 감안해도 5년 정도의 갭이 있음
 > 
-> aws는 MSA의 완성을 넘어 MSA의 문제점에 대한 언급과 함께 Observability의 중요성을 이야기하며
+> aws는 MSA의 완성을 넘어 MSA의 고질적 문제에 대한 언급과 함께 Observability의 중요성을 이야기하며
 > 
 > 2년전부터 Observability driven development에 대한 언급을 시작했음
 > 
