@@ -1,0 +1,53 @@
+@startuml
+' 클래스 정의
+class "User Interface" as UI {
+    +displayResults()
+    +sendRequest()
+}
+
+class "API Gateway" as API {
+    +authenticateRequest()
+    +routeRequest()
+}
+
+class "Processing Service" as Processing {
+    +invokeAIModel()
+    +processData()
+}
+
+class "Inference Service" as Inference {
+    +performInference()
+}
+
+class "Large Language Model (LLM)" as LLM {
+    +generateText()
+    +understandQuery()
+}
+
+class "Database" {
+    +storeData()
+    +retrieveData()
+}
+
+' 관계 정의
+UI --> API : sends request
+API --> Processing : forwards request
+Processing --> Inference : requests inference
+Inference --> LLM : uses LLM for text processing
+LLM --> Database : accesses data for context
+Processing --> Database : accesses data
+
+' 클래스 상세 설명
+note right of UI : Interacts with the user\nHandles user input and output
+
+note right of API : Authenticates and routes requests\nManages API calls
+
+note right of Processing : Executes AI algorithms\nPerforms data processing
+
+note right of Inference : Handles model inference\nProvides predictions
+
+note right of LLM : Processes natural language\nGenerates text responses
+
+note right of Database : Stores and manages data\nHandles data queries
+
+@enduml
