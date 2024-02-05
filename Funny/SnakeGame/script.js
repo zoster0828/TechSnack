@@ -10,13 +10,13 @@ let changingDirection = false;
 
 // 스네이크 캐릭터 이미지 로드
 const headImage = new Image();
-headImage.src = './img/snake_head.png'; // 스네이크 머리 이미지 경로
+headImage.src = '/Funny/SnakeGame/img/snake_head.png'; // 스네이크 머리 이미지 경로
 
 const bodyImage = new Image();
-bodyImage.src = './img/snake_body.png'; // 스네이크 몸통 이미지 경로
+bodyImage.src = '/Funny/SnakeGame/img/snake_body.png'; // 스네이크 몸통 이미지 경로
 
 const tailImage = new Image();
-tailImage.src = './img/snake_tail.png'; // 스네이크 꼬리 이미지 경로
+tailImage.src = '/Funny/SnakeGame/img/snake_tail.png'; // 스네이크 꼬리 이미지 경로
 
 document.addEventListener("keydown", changeDirection);
 
