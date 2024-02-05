@@ -9,3 +9,13 @@ body {
 canvas {
   border: 1px solid #000;
 }
+
+.start-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}

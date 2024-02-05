@@ -1,13 +1,28 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const snakeSize = 20;
+
 let snake = [{x: 160, y: 200}, {x: 140, y: 200}, {x: 120, y: 200}];
 let score = 0; // 점수 변수 초기화
 let food = getNewFoodPosition();
 let dx = snakeSize;
 let dy = 0;
 let changingDirection = false;
+let gameStarted = false; // 게임 시작 여부를 나타내는 변수
+const startMessage = document.getElementById('startMessage');
 
+document.addEventListener("keydown", (event) => {
+
+  if (gameStarted) {
+
+    changeDirection(event);
+  } else if (event.keyCode === 32) { // 스페이스 바를 눌렀을 때
+
+    gameStarted = true; // 게임 시작
+    startMessage.style.display = 'none'; // 메시지 숨김
+    main();
+  }
+});
 // 스네이크 캐릭터 이미지 로드
 const headImage = new Image();
 headImage.src = 'img/snake_head.png'; // 스네이크 머리 이미지 경로
@@ -135,5 +150,3 @@ function drawScore() {
   ctx.font = '16px Arial';
   ctx.fillText("Score: " + score, 8, 20);
 }
-
-main();
