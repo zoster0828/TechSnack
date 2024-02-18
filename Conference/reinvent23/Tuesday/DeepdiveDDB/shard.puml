@@ -1,0 +1,9 @@
+@startuml
+() OpenShard1
+() OpenShard2
+() ClosedShard1
+() ClosedShard2
+OpenShard1 -down-> ClosedShard1
+OpenShard2 -down-> ClosedShard1
+ClosedShard1 -down-> ClosedShard2
+@enduml
