@@ -12,6 +12,8 @@ class Solution34Test {
     }
     @Test
     void test1() {
+        String s = "";
+
         Solution34 solution34 = new Solution34();
         assertArrayEquals(new int[]{2,2}, solution34.searchRange(new int[]{1,2,3}, 3));
     }
