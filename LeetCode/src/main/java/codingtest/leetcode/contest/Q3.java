@@ -4,40 +4,49 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Q3 {
-    PriorityQueue<Num> queue = new PriorityQueue<>((o1, o2) -> {
-        if(o1.val == o2.val) {
-            return o1.po - o2.po;
-        } else {
-            return Long.compare(o1.val, o2.val);
-        }
-    });
     private static int MODULO = (int) Math.pow(10, 9) + 7;
     public int[] getFinalState(int[] nums, int k, int multiplier) {
-        for(int i = 0 ; i < nums.length ; i++) {
-            queue.add(new Num(i, nums[i]));
+        int n = nums.length;
+        long temp[] = new long[n];
+        for(int i = 0 ; i < n ; i++) {
+            temp[i] = nums[i];
         }
+
+        int[] top2 = findTop2(temp);
 
         for(int i = 0 ; i < k ; i++) {
-            Num candid = queue.poll();
-            candid.val = ((candid.val * multiplier) % MODULO);
-            queue.add(candid);
+            temp[top2[0]] = temp[top2[0]] * multiplier % MODULO;
+            if(temp[top2[0]] < temp[top2[1]]) {
+
+            } else {
+                int t = top2[0];
+                top2[0] = top2[1];
+                top2[1] = t;
+                top2 = findTop2(temp);
+            }
         }
 
-        int[] result = new int[nums.length];
-        while(!queue.isEmpty()) {
-            Num temp = queue.poll();
-            result[temp.po] = temp.val.intValue();
+        for(int i = 0 ; i < n ; i++) {
+            nums[i] = (int) temp[i];
         }
 
-        return result;
+        return nums;
     }
 
-    class Num{
-        int po;
-        Long val;
-        public Num(int po, int val) {
-            this.po = po;
-            this.val = (long) val;
+
+    private int[] findTop2(long[] nums) {
+        int[] top2 = new int[]{0,1};
+        for(int i = 0 ; i < nums.length ; i++) {
+            if(nums[top2[0]] > nums[i]) {
+                top2[1] = top2[0];
+                top2[0] = i;
+            } else {
+                if(nums[top2[1]] > nums[i]) {
+                    top2[1] = i;
+                }
+            }
         }
+
+        return top2;
     }
 }
