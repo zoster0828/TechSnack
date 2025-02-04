@@ -19,7 +19,7 @@ const monsterNames = [
   "좀비 드래곤", "좀비 왕"
 ];
 
-// 몬스터 출현 간격(ms)
+// 몬스터 출현 간격(ms) (최소 0.1초까지 감소 가능)
 let spawnDelay = 3000;
 let spawnInterval = null;
 const monsterSpeed = 1.2;
@@ -78,10 +78,10 @@ function updateUI() {
   speedCostSpan.textContent  = speedCost;
 
   // 업그레이드 버튼 활성/비활성
-  spawnUpgradeBtn.disabled  = gold < spawnCost || spawnDelay <= 100;  // 최소 0.1초
-  levelUpgradeBtn.disabled  = gold < levelCost || maxMonsterLevel >= maxLevelLimit; // 최대 10
-  damageUpgradeBtn.disabled = gold < damageCost;
-  speedUpgradeBtn.disabled  = gold < speedCost;
+  spawnUpgradeBtn.disabled  = (gold < spawnCost || spawnDelay <= 100);
+  levelUpgradeBtn.disabled  = (gold < levelCost || maxMonsterLevel >= maxLevelLimit);
+  damageUpgradeBtn.disabled = (gold < damageCost);
+  speedUpgradeBtn.disabled  = (gold < speedCost);
 }
 
 /*******************************************************
@@ -92,7 +92,7 @@ function getMonsterInfo(level) {
   const hp = 30 + (level -1)*25;
   const reward = 10 + (level -1)*5;
 
-  // 이름
+  // 이름 (레벨 범위 안에서 가져오기)
   const idx = Math.min(level-1, monsterNames.length-1);
   const name = monsterNames[idx];
 
@@ -128,14 +128,13 @@ function spawnMonster() {
   const monsterImg = document.createElement("img");
   const imgIndex = Math.min(level, 10);
   monsterImg.src = `assets/monster${imgIndex}.png`;
-  // 예: monster1.png ~ monster10.png
 
   // 조립
   monsterDiv.appendChild(nameDiv);
   monsterDiv.appendChild(healthBar);
   monsterDiv.appendChild(monsterImg);
 
-  // 위치(화면 상단에서 내려옴)
+  // 위치(화면 상단)
   const startLeft = Math.random() * (gameArea.clientWidth - 80);
   monsterDiv.style.left = `${startLeft}px`;
   monsterDiv.style.top  = `-120px`;
@@ -190,7 +189,7 @@ function spawnProjectile(target) {
   const proj = document.createElement("div");
   proj.className = "projectile";
 
-  // 출발 위치 (성 윗부분 중앙)
+  // 출발 위치(성 윗부분 중간)
   const castleRect = castle.getBoundingClientRect();
   const startX = (gameArea.clientWidth / 2);
   const startY = castleRect.top - 20;
@@ -216,12 +215,13 @@ function moveProjectiles() {
   for (let i = projectiles.length - 1; i >= 0; i--) {
     const p = projectiles[i];
     const t = p.target;
+    // 이미 제거된 몬스터?
     if (!monsters.includes(t)) {
       removeProjectile(i);
       continue;
     }
-    const centerX = t.x + 40; // 몬스터 폭80 -> 절반=40
-    const centerY = t.y + 60; // 높이120 -> 절반=60
+    const centerX = t.x + 40;
+    const centerY = t.y + 60;
     const dx = centerX - p.x;
     const dy = centerY - p.y;
     const dist = Math.sqrt(dx*dx + dy*dy);
@@ -239,12 +239,25 @@ function moveProjectiles() {
   }
 }
 
+/**
+ * 몬스터가 피격되었을 때 처리
+ * - 몬스터가 죽으면: 해당 몬스터 타겟팅 중인 모든 투사체 제거
+ */
 function hitMonster(monster, projIndex) {
   removeProjectile(projIndex);
 
   monster.hp -= weaponDamage;
   if (monster.hp <= 0) {
     gold += monster.reward;
+
+    // (중요) 몬스터가 죽었으면
+    // 이 몬스터를 향해 날아가던 투사체 모두 제거
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      if (projectiles[i].target === monster) {
+        removeProjectile(i);
+      }
+    }
+
     gameArea.removeChild(monster.element);
     monsters.splice(monsters.indexOf(monster), 1);
   }
@@ -260,14 +273,40 @@ function removeProjectile(idx) {
 
 /*******************************************************
  * 자동 공격
+ * - "예상 데미지" 계산하여, 죽을 몬스터는 추가 발사하지 않음
+ * - 살아있어도, 이미 날아가는 투사체로 죽을 예측이면 다음 몬스터로
  *******************************************************/
 function startAutoAttack() {
   if (attackInterval) clearInterval(attackInterval);
   const attackDelay = 1000 / attackSpeed;
+
   attackInterval = setInterval(() => {
     if (monsters.length === 0 || isGameOver) return;
-    const target = monsters[0];
-    if (target) spawnProjectile(target);
+
+    // 순서대로 몬스터를 확인, "기존 투사체로 죽을 예정"이 아닌 몬스터를 찾는다
+    let target = null;
+    for (let i = 0; i < monsters.length; i++) {
+      const m = monsters[i];
+      // 현재 m을 향해 날아가는 투사체 수
+      const inFlight = projectiles.filter(p => p.target === m).length;
+      const pendingDamage = inFlight * weaponDamage;
+
+      // 현재 HP보다 pendingDamage가 작다면, "아직 죽지 않을 몬스터"이므로 타겟!
+      if (m.hp > pendingDamage) {
+        target = m;
+        break;
+      }
+      // pendingDamage >= m.hp => 이미 죽을 예정, 스킵하고 다음 몬스터 확인
+    }
+
+    if (!target) {
+      // 모든 몬스터가 이미 "기존 투사체로 죽을 예정"이거나 없음
+      return;
+    }
+
+    // 선택된 타겟에게 투사체 발사
+    spawnProjectile(target);
+
   }, attackDelay);
 }
 
@@ -344,7 +383,7 @@ function startGame() {
   gameOverMessage.style.display = "none";
   isGameOver = false;
 
-  gold = 100;
+  gold = 1000;
   weaponDamage = 10;
   attackSpeed = 1;
   maxMonsterLevel = 1;
