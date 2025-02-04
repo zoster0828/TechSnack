@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>몬스터 타이쿤 (파일 분리 & 몬스터 이름+체력바)</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<!-- 상단 정보 -->
+<div id="topInfo">
+    <p>소지 금액: <span id="goldDisplay">0</span></p>
+    <p>무기 데미지: <span id="damageDisplay">0</span></p>
+    <p>발사 속도: <span id="speedDisplay">0</span> (회/초)</p>
+    <p>몬스터 등장 주기(초): <span id="spawnDisplay">3.0</span></p>
+</div>
+
+<!-- 상점 버튼 -->
+<button id="shopButton">상점</button>
+
+<!-- 상점(업그레이드) 메뉴 -->
+<div id="shopMenu">
+    <h2>상점</h2>
+    <div class="upgrade-item">
+        <strong>몬스터 출현 빈도 증가</strong><br/>
+        <span>가격: <span id="spawnCostSpan"></span></span><br/>
+        <button id="spawnUpgradeBtn">구매</button>
+    </div>
+    <div class="upgrade-item">
+        <strong>몬스터 레벨 증가</strong><br/>
+        <span>가격: <span id="levelCostSpan"></span></span><br/>
+        <button id="levelUpgradeBtn">구매</button>
+    </div>
+    <div class="upgrade-item">
+        <strong>무기 데미지 강화</strong><br/>
+        <span>가격: <span id="damageCostSpan"></span></span><br/>
+        <button id="damageUpgradeBtn">구매</button>
+    </div>
+    <div class="upgrade-item">
+        <strong>무기 발사 속도 증가</strong><br/>
+        <span>가격: <span id="speedCostSpan"></span></span><br/>
+        <button id="speedUpgradeBtn">구매</button>
+    </div>
+</div>
+
+<!-- 게임 영역 -->
+<div id="gameArea">
+    <div id="gameOverMessage">게임 오버!</div>
+    <button id="startButton">게임 시작</button>
+    <!-- 성 이미지 -->
+    <img id="castle" src="assets/castle.png" alt="castle" />
+</div>
+
+<!-- 메인 자바스크립트 -->
+<script src="main.js"></script>
+</body>
+</html>

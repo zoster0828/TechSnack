@@ -1,0 +1,181 @@
+/* ===== 기본 리셋 & 레이아웃 ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #f0f0f0;
+  overflow: hidden; /* 스크롤 숨기기 */
+}
+
+#gameArea {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #ecf0f1;
+  overflow: hidden;
+}
+
+/* 상단 UI */
+#topInfo {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255,255,255,0.8);
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  z-index: 100;
+}
+#topInfo p {
+  margin: 5px 0;
+}
+
+/* 상점 버튼 */
+#shopButton {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  z-index: 100;
+}
+
+/* 상점(업그레이드) 메뉴 */
+#shopMenu {
+  display: none;
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  width: 220px;
+  background-color: #fff;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 100;
+}
+#shopMenu h2 {
+  margin-top: 0;
+}
+.upgrade-item {
+  margin-bottom: 10px;
+}
+.upgrade-item button {
+  margin-top: 5px;
+  padding: 5px;
+  border: none;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.upgrade-item button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* 시작 버튼 */
+#startButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 40px;
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #27ae60;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* 게임 오버 메시지 */
+#gameOverMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  color: #c0392b;
+  display: none;
+  z-index: 200;
+}
+
+/* 성 */
+#castle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 120px;
+}
+
+/* ===== 몬스터 ===== */
+.monster {
+  position: absolute;
+  width: 80px;
+  height: 120px; /* 이미지 크기에 맞춤 */
+}
+
+/* 이름 표시 */
+.monster-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 16px;
+  font-size: 12px;
+  text-align: center;
+  background-color: rgba(255,255,255,0.5);
+  color: #111;
+  line-height: 16px;
+  border: 1px solid #888;
+  border-radius: 3px;
+}
+
+/* 체력바 */
+.monster-healthbar {
+  position: absolute;
+  top: 16px; /* 이름 밑으로 배치 */
+  left: 0;
+  width: 80px;
+  height: 10px;
+  background-color: rgba(255,255,255,0.5);
+  border: 1px solid #333;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.monster-healthbar-fill {
+  height: 100%;
+  background-color: #2ecc71; /* 초록색 */
+  width: 100%;
+}
+
+/* 몬스터 이미지 */
+.monster img {
+  position: absolute;
+  top: 26px; /* 체력바 아래 */
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #888;
+  border-radius: 5px;
+}
+
+/* 투사체 */
+.projectile {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: orange;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
