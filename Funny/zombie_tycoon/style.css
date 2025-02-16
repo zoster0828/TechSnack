@@ -179,3 +179,156 @@ body {
   transform: translate(-50%, -50%);
   z-index: 10;
 }
+
+/* 돈 획득 애니메이션 */
+.coin-animation {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  transition: all 0.6s ease-in-out; /* 자연스러운 이동 */
+  opacity: 1;
+}
+
+/* 뽑기 상점 버튼 */
+#lotteryButton {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #8e44ad;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  z-index: 100;
+}
+
+/* 뽑기 상점 UI */
+#lotteryShop {
+  display: none;
+  position: fixed;
+  top: 100px;
+  right: 10px;
+  width: 200px;
+  background-color: #fff;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 100;
+}
+#lotteryShop h2 {
+  margin-top: 0;
+}
+.lottery-item {
+  margin-bottom: 10px;
+}
+.lottery-item button {
+  margin-top: 5px;
+  padding: 10px;
+  border: none;
+  background-color: #e67e22;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 3px;
+  width: 100%;
+}
+.lottery-item button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+/* 초대박 100배 보너스 코인 */
+.coin-animation {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  transition: all 1s ease-in-out;
+  opacity: 1;
+}
+
+/* 보호 구역 시각적 표시 */
+#protectedZone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 0, 0, 0.2); /* 반투명한 붉은색 */
+  z-index: 5;
+}
+
+/* 왼쪽 아래 배치 */
+#monsterListContainer {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+
+  width: 300px; /* 가로 크기 적당히 */
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 10px;
+
+  z-index: 50; /* UI 레벨 조정 */
+}
+
+/* 몬스터 아이템(1~20) 2줄 */
+.monster-list-row {
+  display: flex;
+  flex-wrap: nowrap;
+  /* 레벨 1~10 한 줄, 11~20 한 줄로 배치하려면,
+     JS에서 row2를 별도로 만들거나, flex-wrap으로 다음줄 이동 */
+  margin-bottom: 5px;
+}
+
+/* 각 몬스터 미니 박스 */
+.monster-list-item {
+  width: 40px; /* 가로폭 */
+  margin-right: 5px;
+  text-align: center;
+  font-size: 10px;
+  background-color: rgba(255,255,255,0.8);
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+/* 잠금 상태일 때 숨김/회색처리 등 */
+.monster-list-item.locked {
+  display: none;
+  /* 또는 filter: grayscale(100%); 로 색만 없애거나,
+     opacity: 0.3; 등등 원하는 표현 */
+}
+
+/* 몬스터 목록 이미지 미니 아이콘 */
+.monster-list-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 플레이어 이름 입력창 스타일 */
+#playerNameContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 10px;
+  text-align: center;
+  z-index: 200;
+}
+
+#playerNameContainer input {
+  padding: 8px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+#playerNameContainer button {
+  padding: 8px 15px;
+  font-size: 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

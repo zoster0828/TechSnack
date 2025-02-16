@@ -42,15 +42,47 @@
     </div>
 </div>
 
+<!-- 뽑기 상점 버튼 -->
+<button id="lotteryButton">뽑기 상점</button>
+
+<!-- 뽑기 상점 UI -->
+<div id="lotteryShop">
+    <h2>🎰 뽑기 상점</h2>
+    <div class="lottery-item">
+        <button id="lottery100">💰 100원 뽑기</button>
+    </div>
+    <div class="lottery-item">
+        <button id="lottery10000">💰 만원 뽑기</button>
+    </div>
+    <div class="lottery-item">
+        <button id="lottery1000000">💰 백만원 뽑기</button>
+    </div>
+    <div class="lottery-item">
+        <button id="lottery100000000">💰 1억원 뽑기</button>
+    </div>
+</div>
+
 <!-- 게임 영역 -->
 <div id="gameArea">
     <div id="gameOverMessage">게임 오버!</div>
-    <button id="startButton">게임 시작</button>
+    <!-- 플레이어 이름 입력 UI -->
+    <div id="playerNameContainer">
+        <label for="playerNameInput">플레이어 이름:</label>
+        <input type="text" id="playerNameInput" placeholder="이름을 입력하세요" />
+        <button id="startGameWithName">게임 시작</button>
+    </div>
+
     <!-- 성 이미지 -->
     <img id="castle" src="assets/castle.png" alt="castle" />
 </div>
-
-<!-- 메인 자바스크립트 -->
-<script src="main.js"></script>
+<!-- 몬스터 목록 표시 영역 -->
+<div id="monsterListContainer">
+    <!-- JavaScript로 내부를 생성하거나,
+         미리 구조만 잡아두고 JS로 fill 해도 됩니다. -->
+</div>
+<script type="module" src="gameLogic.js"></script>
+<script type="module" src="main.js"></script>
+<script type="module" src="monsterListUI.js"></script>
+<script type="module" src="state.js"></script>
 </body>
 </html>
