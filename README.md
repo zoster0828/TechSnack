@@ -3,3 +3,4 @@
 * leetcode 기록
 * [SnakeGame](Funny/SnakeGame/index.html)
 * [ZombieTycoon](Funny/zombie_tycoon/index.html)
+* [Don't move](Funny/dontmove/index.html)
