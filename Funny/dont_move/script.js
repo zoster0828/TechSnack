@@ -75,22 +75,39 @@ async function setupCamera() {
 // 3) TTS
 // ---------------------------
 function speak(text) {
-  // 기존의 중단 호출
+  // 이미 재생 중인 TTS 취소
   speechSynthesis.cancel();
 
+  // 1) 기기 언어 설정 확인
+  // - iOS Safari, 안드로이드 크롬 등에서 대부분 navigator.language 반환 가능
+  // - 예: "ko-KR", "en-US", "en-GB" 등
+  const userLang = (navigator.language || 'en-US').toLowerCase();
+
+  // 2) 언어 결정
+  let selectedLang;
+  if (userLang.startsWith('ko')) {
+    // 한국어 기기
+    selectedLang = 'ko-KR';
+  } else {
+    // 그 외(영문 등)
+    selectedLang = 'en-US';
+  }
+
+  // 3) SpeechSynthesisUtterance 생성
   const utter = new SpeechSynthesisUtterance(text);
-  // ➊ 한국어 지정
-  utter.lang = 'ko-KR';
-  // ➋ (선택) 실제 설치된 ‘한국어 보이스’ 할당
-  const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('ko'));
+  utter.lang = selectedLang;
+
+  // (선택) 실제로 설치된 음성 중에서 selectedLang에 맞는 voice를 찾기
+  //  - iOS/Android에서 해당 언어 음성이 설치되어 있으면 더 자연스럽게 발음
+  const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith(selectedLang));
   if (voices.length > 0) {
-    // 첫 번째 한국어 보이스를 사용 (iOS에서 기본 ‘Yuna’ 등)
     utter.voice = voices[0];
   }
 
-  // ➌ 발음
+  // 4) 재생
   speechSynthesis.speak(utter);
 }
+
 
 function stopAllTTS() {
   speechSynthesis.cancel();
