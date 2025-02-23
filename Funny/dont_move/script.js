@@ -75,11 +75,23 @@ async function setupCamera() {
 // 3) TTS
 // ---------------------------
 function speak(text) {
+  // 기존의 중단 호출
   speechSynthesis.cancel();
+
   const utter = new SpeechSynthesisUtterance(text);
+  // ➊ 한국어 지정
   utter.lang = 'ko-KR';
+  // ➋ (선택) 실제 설치된 ‘한국어 보이스’ 할당
+  const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('ko'));
+  if (voices.length > 0) {
+    // 첫 번째 한국어 보이스를 사용 (iOS에서 기본 ‘Yuna’ 등)
+    utter.voice = voices[0];
+  }
+
+  // ➌ 발음
   speechSynthesis.speak(utter);
 }
+
 function stopAllTTS() {
   speechSynthesis.cancel();
 }
