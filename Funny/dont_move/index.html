@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>무궁화 꽃이 피었습니다 - 예시</title>
+    <style>
+        body { text-align: center; margin: 0; padding: 0; }
+        #container { margin: auto; position: relative; width: 640px; }
+        video, canvas { width: 640px; height: 480px; background: #222; }
+        #status { margin-top: 10px; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+<h1>무궁화 꽃이 피었습니다 - MultiPose Thunder 예시</h1>
+<div id="container">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+</div>
+<div id="status">- 모델 로딩 전 -</div>
+<button id="startBtn" disabled>게임 시작</button>
+
+<!-- TensorFlow.js -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
+<!-- Pose Detection (MoveNet MultiPose) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+<script src="script.js"></script>
+</body>
+</html>
