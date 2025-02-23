@@ -2,16 +2,24 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>무궁화 꽃이 피었습니다 - 빨간불 시 움직이면 탈락</title>
+    <title>무궁화 꽃이 피었습니다 - iPhone 15 Pro 최적화 예시</title>
     <style>
         body { text-align: center; margin: 0; padding: 0; }
-        #container { margin: auto; position: relative; width: 640px; }
-        video, canvas { width: 640px; height: 480px; background: #222; }
+        #container {
+          width: 640px;
+          margin: auto;
+          position: relative;
+        }
+        video, canvas {
+          width: 640px;
+          height: 480px;
+          background: #222;
+        }
         #status { margin-top: 10px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
-<h1>무궁화 꽃이 피었습니다 - 빨간불 움직임 탈락 예시</h1>
+<h1>무궁화 꽃이 피었습니다 - iPhone 15 Pro 최적화</h1>
 <div id="container">
     <video id="video" autoplay playsinline muted></video>
     <canvas id="canvas"></canvas>
@@ -19,10 +27,11 @@
 <div id="status">- 모델 로딩 전 -</div>
 <button id="startBtn" disabled>게임 시작</button>
 
-<!-- TensorFlow.js -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
-<!-- Pose Detection (MoveNet MultiPose) -->
+<!-- TensorFlow.js (4.x 이상) + WebGPU 백엔드 + pose-detection -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.6.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu/dist/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
 <script src="script.js"></script>
 </body>
 </html>

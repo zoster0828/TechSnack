@@ -4,31 +4,59 @@ const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
 const startBtn = document.getElementById('startBtn');
 
-// === 전역 상태 ===
-let detector = null;         // MoveNet MultiPose Detector
-let detectionActive = false; // 실시간 감지 on/off
-let modelLoaded = false;     // 모델 로딩 완료 여부
+// 전역 flags
+let modelLoaded = false;          // 모델 로딩 완료 여부
+let detectionActive = false;      // 실시간 감지 on/off
+let gameActive = false;           // 게임 진행 여부
+let isRedLight = false;           // 빨간불 상태
 
-// 이전 프레임 Pose
-let prevPoses = [];
-// 움직임 감지 플래그
-let movementDetected = false;
-
-// 게임 진행
-let gameActive = false;
+// 라운드
 let currentRound = 0;
 const MAX_ROUNDS = 10;
 
-// "빨간불" 상태를 구분(빨간불일 때 움직임이 감지되면 즉시 탈락)
-let isRedLight = false;
+// Pose Detector
+let detector = null;
 
-// ------------------------------------
-// (1) 카메라 셋업
-// ------------------------------------
+// 이전 프레임 Pose
+let prevPoses = [];
+
+// 추론 주기 제한 (약 10fps)
+const DETECTION_INTERVAL = 100; // ms
+let lastDetectionTime = 0;
+
+// ---------------------------
+// 1) WebGPU 백엔드 우선 설정
+// ---------------------------
+async function initBackend() {
+  // WebGPU 백엔드 등록 여부 확인
+  const hasWebGPUBackend = !!tf.engine().registryFactory['webgpu'];
+  if (hasWebGPUBackend) {
+    try {
+      await tf.setBackend('webgpu');
+      await tf.ready();
+      console.log('✅ Using WebGPU backend');
+      return;
+    } catch (err) {
+      console.warn('❌ WebGPU not available, fallback to WebGL', err);
+    }
+  }
+  // fallback to webgl
+  await tf.setBackend('webgl');
+  await tf.ready();
+  console.log('🔄 Using WebGL backend');
+}
+
+// ---------------------------
+// 2) 카메라 셋업
+// ---------------------------
 async function setupCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 640, height: 480 },
+      video: {
+        facingMode: 'user',
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
       audio: false
     });
     video.srcObject = stream;
@@ -43,48 +71,59 @@ async function setupCamera() {
   }
 }
 
-// ------------------------------------
-// (2) TTS: 말하기/취소
-// ------------------------------------
+// ---------------------------
+// 3) TTS
+// ---------------------------
 function speak(text) {
   speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'ko-KR';
   speechSynthesis.speak(utter);
 }
-
 function stopAllTTS() {
   speechSynthesis.cancel();
 }
 
-// ------------------------------------
-// (3) Detector 초기화 (MoveNet MultiPose Thunder)
-// ------------------------------------
+// ---------------------------
+// 4) MoveNet MultiPose Thunder 초기화
+// ---------------------------
 async function initDetector() {
   const model = poseDetection.SupportedModels.MoveNet;
   const detectorConfig = {
-    modelType: poseDetection.movenet.modelType.MULTIPOSE_THUNDER,
+    modelType: poseDetection.movenet.modelType.MULTIPOSE_THUNDER
   };
   detector = await poseDetection.createDetector(model, detectorConfig);
 }
 
-// ------------------------------------
-// (4) 메인 추론 루프 (requestAnimationFrame)
-//     - 빨간불 기간에 움직임 감지되면 즉시 탈락
-// ------------------------------------
-async function detectionLoop() {
+// ---------------------------
+// 5) 메인 루프 (requestAnimationFrame)
+//    - 그러나 실제 추론은 DETECTION_INTERVAL 간격으로 실행
+// ---------------------------
+function mainLoop(timestamp) {
   if (!detectionActive) return;
 
-  // 1) 비디오를 캔버스에 그리기
+  // (A) 화면에 비디오 그리기
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // 2) 카메라 가림 체크 (화면이 어두워지면 승리)
+  // (B) 일정 주기가 지났다면 pose 추론
+  const elapsed = timestamp - lastDetectionTime;
+  if (elapsed > DETECTION_INTERVAL) {
+    lastDetectionTime = timestamp;
+    doPoseDetection(); // 실제 추론 & 움직임 체크
+  }
+
+  requestAnimationFrame(mainLoop);
+}
+
+// 실제 pose 추론 함수
+async function doPoseDetection() {
+  // 카메라가 가려졌는지 먼저 체크 (가려지면 승리)
   if (checkCover() && gameActive) {
     endGame(true); // 승리
     return;
   }
 
-  // 3) Pose 추론
+  // Pose 추론
   let poses = [];
   try {
     poses = await detector.estimatePoses(video, {
@@ -92,8 +131,7 @@ async function detectionLoop() {
       flipHorizontal: false
     });
   } catch (err) {
-    console.warn('estimatePoses 에러:', err);
-    requestAnimationFrame(detectionLoop);
+    console.warn("Pose 추론 에러:", err);
     return;
   }
 
@@ -111,59 +149,54 @@ async function detectionLoop() {
     return {
       keypoints: pose.keypoints,
       box: {
-        x: minX, y: minY,
+        x: minX,
+        y: minY,
         width: maxX - minX,
         height: maxY - minY
       }
     };
   });
 
-  // 4) 움직임 감지
-  movementDetected = detectMovementMulti(persons, prevPoses);
-
-  // "빨간불" 상태이며, 게임이 진행 중이고, 움직임 감지되면 => 즉시 탈락
+  // 움직임 감지
+  const movementDetected = detectMovementMulti(persons, prevPoses);
+  // 빨간불 + 움직임 + 게임중 -> 탈락
   if (isRedLight && gameActive && movementDetected) {
     endGame(false);
     return;
   }
 
-  // 5) 시각화(옵션)
+  // 시각화(옵션)
   drawPersons(persons);
 
-  // 6) 갱신
+  // update prev
   prevPoses = persons;
-
-  // 7) 다음 프레임 요청
-  requestAnimationFrame(detectionLoop);
 }
 
-// ------------------------------------
-// (5) 카메라 가림 여부 판정(평균 밝기)
-// ------------------------------------
+// ---------------------------
+// 6) 카메라 가림 체크 (평균 밝기)
+// ---------------------------
 function checkCover() {
   const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
   let total = 0;
-  let step = 50;
+  const step = 50;
   for (let i = 0; i < frame.data.length; i += 4 * step) {
     const r = frame.data[i];
-    const g = frame.data[i + 1];
-    const b = frame.data[i + 2];
+    const g = frame.data[i+1];
+    const b = frame.data[i+2];
     total += (r + g + b) / 3;
   }
   const count = frame.data.length / (4 * step);
   const avg = total / count;
-  return avg < 10; // 어두우면 가림으로 판단
+  return (avg < 10); // 아주 어두우면 가림 판단
 }
 
-// ------------------------------------
-// (6) 여러 사람 움직임 감지
-//     - MOVE_THRESHOLD를 낮추면 더 민감하게 감지
-// ------------------------------------
+// ---------------------------
+// 7) 여러 사람 움직임 감지
+// ---------------------------
 function detectMovementMulti(currentPersons, prevPersons) {
-  if (!prevPersons || prevPersons.length === 0) {
-    return false;
-  }
-  const MOVE_THRESHOLD = 10; // 더 민감하게
+  if (!prevPersons || prevPersons.length === 0) return false;
+
+  const MOVE_THRESHOLD = 15; // iPhone에서 약간 여유
   for (let cur of currentPersons) {
     const match = findClosestPerson(cur, prevPersons);
     if (!match) continue;
@@ -183,7 +216,7 @@ function findClosestPerson(person, prevPersons) {
     const c2 = getCenter(p.box);
     const dx = c1.x - c2.x;
     const dy = c1.y - c2.y;
-    const dist = dx * dx + dy * dy;
+    const dist = dx*dx + dy*dy;
     if (dist < minDist) {
       minDist = dist;
       best = p;
@@ -192,17 +225,19 @@ function findClosestPerson(person, prevPersons) {
   return best;
 }
 
+function getCenter(box) {
+  return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+}
+
 function computeAvgKeypointDistance(kpsA, kpsB) {
   let sumDist = 0;
   let count = 0;
   for (let i = 0; i < kpsA.length; i++) {
-    const a = kpsA[i];
-    const b = kpsB[i];
+    const a = kpsA[i], b = kpsB[i];
     if (a.score > 0.3 && b.score > 0.3) {
       const dx = a.x - b.x;
       const dy = a.y - b.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      sumDist += dist;
+      sumDist += Math.sqrt(dx*dx + dy*dy);
       count++;
     }
   }
@@ -210,16 +245,9 @@ function computeAvgKeypointDistance(kpsA, kpsB) {
   return sumDist / count;
 }
 
-function getCenter(box) {
-  return {
-    x: box.x + box.width / 2,
-    y: box.y + box.height / 2
-  };
-}
-
-// ------------------------------------
-// (7) 시각화(옵션)
-// ------------------------------------
+// ---------------------------
+// 8) 시각화(옵션): bbox & keypoints
+// ---------------------------
 function drawPersons(persons) {
   ctx.strokeStyle = 'lime';
   ctx.lineWidth = 2;
@@ -233,24 +261,22 @@ function drawPersons(persons) {
     p.keypoints.forEach(kp => {
       if (kp.score > 0.3) {
         ctx.beginPath();
-        ctx.arc(kp.x, kp.y, 3, 0, 2 * Math.PI);
+        ctx.arc(kp.x, kp.y, 4, 0, 2 * Math.PI);
         ctx.fill();
       }
     });
   });
 }
 
-// ------------------------------------
-// (8) 게임 로직
-//     - "무궁화 꽃이 피었습니다" (초록불)에 움직임 자유
-//     - 이후 3초 (빨간불) 동안 움직이면 탈락
-// ------------------------------------
+// ---------------------------
+// 9) 게임 로직 (빨간불/초록불)
+// ---------------------------
 async function startGameFlow() {
   if (!modelLoaded) {
-    alert("아직 모델이 로딩되지 않았습니다!");
+    alert("모델이 아직 로딩되지 않았습니다!");
     return;
   }
-  if (gameActive) return; // 이미 진행중
+  if (gameActive) return;
 
   gameActive = true;
   currentRound = 0;
@@ -261,35 +287,29 @@ async function startGameFlow() {
     if (!gameActive) break;
     currentRound = i;
 
-    // --- (A) 초록불: "무궁화 꽃이 피었습니다." (움직임 자유) ---
-    statusEl.textContent = `Round ${i} - 초록불 (움직여도 됨)`;
+    // (A) 초록불 구간: "무궁화 꽃이 피었습니다."
+    statusEl.textContent = `Round ${i}: 초록불 (움직여도 됨)`;
     speak("무궁화 꽃이 피었습니다.");
     isRedLight = false;
-    // 여기선 2초 정도 대기
+    // 2초 정도 대기
     await wait(2000);
     if (!gameActive) break;
 
-    // --- (B) 빨간불: 3초 ---
-    statusEl.textContent = `Round ${i} - 빨간불 3초 (움직이면 탈락)`;
+    // (B) 빨간불 3초
+    statusEl.textContent = `Round ${i}: 빨간불 3초 (움직이면 탈락)`;
     speak("빨간불입니다. 움직이지 마세요.");
     isRedLight = true;
-
-    // 3초 대기 중에 detectionLoop 에서 movementDetected=true => endGame(false) 처리
     await wait(3000);
+    isRedLight = false;
     if (!gameActive) break;
 
     statusEl.textContent = `Round ${i} 완료`;
-    // 빨간불 해제
-    isRedLight = false;
   }
 
-  // 10라운드가 끝났는데 승리 못했다면 => 패배
-  if (gameActive) {
-    endGame(false);
-  }
+  // 10라운드 끝났는데 승리 못하면 패배
+  if (gameActive) endGame(false);
 }
 
-// (9) 게임 종료
 function endGame(isWin) {
   if (!gameActive) return;
   gameActive = false;
@@ -300,41 +320,49 @@ function endGame(isWin) {
     statusEl.textContent = "플레이어 승리! (카메라 가려짐)";
   } else {
     speak("플레이어 패배");
-    statusEl.textContent = "플레이어 패배! (빨간불에 움직임 발견 or 10라운드 완료)";
+    statusEl.textContent = "플레이어 패배! (빨간불에 움직임 or 10라운드 종료)";
   }
 
-  // 빨간불 플래그 해제
   isRedLight = false;
 }
 
-// 유틸
+// ---------------------------
+// 10) 유틸
+// ---------------------------
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// ------------------------------------
-// (10) 초기화 흐름: 페이지 로드 시
-// ------------------------------------
-startBtn.addEventListener('click', async () => {
+// ---------------------------
+// 11) 초기화 흐름
+// ---------------------------
+startBtn.addEventListener('click', () => {
   if (!modelLoaded) {
-    alert("모델이 아직 로딩되지 않았습니다!");
+    alert("아직 모델이 로딩되지 않았습니다!");
     return;
   }
   startGameFlow();
 });
 
 (async function initAll() {
+  // (A) WebGPU 백엔드 (or WebGL) 설정
+  await initBackend();
+
+  // (B) 카메라 준비
   statusEl.textContent = "카메라 준비 중...";
   await setupCamera();
   video.play();
 
-  statusEl.textContent = "MoveNet MultiPose Thunder 모델 로딩 중...";
+  // (C) MoveNet MultiPose Thunder 모델 로딩
+  statusEl.textContent = "포즈 모델 로딩 중...";
   await initDetector();
 
+  // (D) 모델 로딩 완료
   modelLoaded = true;
   statusEl.textContent = "모델 로딩 완료! [게임 시작] 버튼을 누르세요.";
   startBtn.disabled = false;
 
+  // (E) detection 루프 시작
   detectionActive = true;
-  requestAnimationFrame(detectionLoop);
+  requestAnimationFrame(mainLoop);
 })();
