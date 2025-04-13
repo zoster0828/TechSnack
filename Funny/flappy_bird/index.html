@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flappy Bird</title>
+    <style>
+        body {
+          margin: 0;
+          background-color: #70c5ce;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+        canvas {
+          background: url('https://www.transparenttextures.com/patterns/square.png');
+          display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const cloud1Img = new Image();
+    const cloud2Img = new Image();
+    cloud1Img.src = "cloud1.png";
+    cloud2Img.src = "cloud2.png";
+
+    let clouds = [
+      { img: cloud1Img, x: 0, y: 50, speed: 0.3 },
+      { img: cloud2Img, x: 200, y: 100, speed: 0.2 },
+      { img: cloud1Img, x: 400, y: 30, speed: 0.4 },
+      { img: cloud2Img, x: 600, y: 70, speed: 0.25 }
+    ];
+
+    const GRAVITY = 0.2;
+    const FLAP = -5;
+    const PIPE_WIDTH = 60;
+    const PIPE_GAP = 180;
+
+    const BIRD_WIDTH = 60;
+    const BIRD_HEIGHT = 60;
+    const PIPE_HITBOX_REDUCTION = 30;
+    const PIPE_SPAWN_INTERVAL = 280;
+
+    const birdImg = new Image();
+    const birdFlapImg = new Image();
+    const birdDeadImg = new Image();
+    const pipeTopImg = new Image();
+    const pipeBottomImg = new Image();
+
+    birdImg.src = "bird_transparent_v2.png";
+    birdFlapImg.src = "bird_flap_transparent_v2.png";
+    birdDeadImg.src = "bird_dead_transparent_v2.png";
+    pipeTopImg.src = "pipe_top_transparent_v2.png";
+    pipeBottomImg.src = "pipe_bottom_transparent_v2.png";
+
+    let birdY = canvas.height / 2;
+    let birdX = 80;
+    let velocity = 0;
+    let pipes = [];
+    let score = 0;
+    let gameOver = false;
+    let flap = false;
+    let countdown = 3;
+    let countdownActive = true;
+
+    function resetGame() {
+      birdY = canvas.height / 2;
+      velocity = 0;
+      pipes = [];
+      score = 0;
+      gameOver = false;
+      countdown = 3;
+      countdownActive = true;
+      spawnPipe();
+
+      let countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+          countdownActive = false;
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+    }
+
+    function spawnPipe() {
+      const gapY = Math.random() * (canvas.height - PIPE_GAP - 120) + 60;
+      const showTop = Math.random() < 0.8; // 80% 확률로 위 파이프 표시
+      const showBottom = Math.random() < 0.8; // 80% 확률로 아래 파이프 표시
+
+      pipes.push({
+        x: canvas.width,
+        y: gapY,
+        showTop,
+        showBottom
+      });
+    }
+
+    function drawBird() {
+      const img = gameOver ? birdDeadImg : flap ? birdFlapImg : birdImg;
+      ctx.drawImage(img, birdX, birdY, BIRD_WIDTH, BIRD_HEIGHT);
+    }
+
+    function drawPipes() {
+      pipes.forEach(pipe => {
+        if (pipe.showTop) {
+          ctx.drawImage(pipeTopImg, pipe.x, pipe.y - pipeTopImg.height, PIPE_WIDTH, pipeTopImg.height);
+        }
+        if (pipe.showBottom) {
+          ctx.drawImage(pipeBottomImg, pipe.x, pipe.y + PIPE_GAP, PIPE_WIDTH, pipeBottomImg.height);
+        }
+      });
+    }
+
+    function update() {
+      if (gameOver || countdownActive) return;
+
+      velocity += GRAVITY;
+      birdY += velocity;
+      if (flap) flap = false;
+
+      pipes.forEach(pipe => {
+        pipe.x -= 1.2;
+      });
+
+      if (pipes[0].x + PIPE_WIDTH < 0) {
+        pipes.shift();
+        score++;
+      }
+
+      if (pipes.length === 0 || (pipes[pipes.length - 1].x < canvas.width - PIPE_SPAWN_INTERVAL)) {
+        spawnPipe();
+      }
+
+      pipes.forEach(pipe => {
+        const pipeHitboxLeft = pipe.x + PIPE_HITBOX_REDUCTION;
+        const pipeHitboxRight = pipe.x + PIPE_WIDTH - PIPE_HITBOX_REDUCTION;
+        const birdBottom = birdY + BIRD_HEIGHT;
+
+        if (
+          birdX + BIRD_WIDTH > pipeHitboxLeft &&
+          birdX < pipeHitboxRight &&
+          ((pipe.showTop && birdY < pipe.y) || (pipe.showBottom && birdBottom > pipe.y + PIPE_GAP))
+        ) {
+          gameOver = true;
+        }
+      });
+
+      if (birdY > canvas.height || birdY < 0) {
+        gameOver = true;
+      }
+    }
+
+    function draw() {
+      // draw moving clouds
+      clouds.forEach(cloud => {
+        cloud.x -= cloud.speed;
+        if (cloud.x + 100 < 0) cloud.x = canvas.width + Math.random() * 100;
+        ctx.drawImage(cloud.img, cloud.x, cloud.y, 100, 60);
+      });
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPipes();
+      drawBird();
+      ctx.fillStyle = "#fff";
+      ctx.font = "24px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(`Score: ${score}`, 10, 40);
+
+      if (countdownActive) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "48px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(countdown, canvas.width / 2, canvas.height / 2);
+      }
+
+      if (gameOver) {
+        ctx.font = "24px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Game Over - Press Space to Restart", canvas.width / 2, canvas.height / 2);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    window.addEventListener("keydown", e => {
+      if (e.code === "Space") {
+        if (gameOver) {
+          resetGame();
+        } else if (!countdownActive) {
+          velocity = FLAP;
+          flap = true;
+        }
+      }
+    });
+
+    birdDeadImg.onload = () => {
+      resetGame();
+      gameLoop();
+    };
+</script>
+</body>
+</html>
